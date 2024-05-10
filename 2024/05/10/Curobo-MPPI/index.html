@@ -13,7 +13,7 @@
 
 
 
-<title>Model Predictive Control | Saiyao&#39;s Blog</title>
+<title>Curobo_MPPI | Saiyao&#39;s Blog</title>
 
 
 
@@ -127,11 +127,76 @@
                 <div class="container">
     
     
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
 
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">Model Predictive Control</h1>
+            <h1 class="post-title">Curobo_MPPI</h1>
             
                 <div class="post-meta">
                     
@@ -140,23 +205,50 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">May 2, 2024&nbsp;&nbsp;12:16:49</a>
+                        Date: <a href="#">May 10, 2024&nbsp;&nbsp;22:49:08</a>
                         </span>
                     
-                    
-                        <span class="post-category">
-                    Category:
-                            
-                                <a href="/categories/robotics/">robotics</a>
-                            
-                        </span>
                     
                 </div>
             
         </header>
 
         <div class="post-content">
-            <p>HEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEELO!</p>
+            <h2 id="MPPI-opt"><a href="#MPPI-opt" class="headerlink" title="MPPI opt"></a>MPPI opt</h2><h4 id="slove-wrap-mpc"><a href="#slove-wrap-mpc" class="headerlink" title="slove(wrap_mpc)"></a>slove(wrap_mpc)</h4><ul>
+<li>input: <strong>goal,current_state,seed(int_act)</strong></li>
+<li>output: <strong>act_seq(optimiazed),act</strong></li>
+</ul>
+<h4 id="optimize-wrap-base"><a href="#optimize-wrap-base" class="headerlink" title="optimize(wrap_base)"></a>optimize(wrap_base)</h4><ul>
+<li>decide which optimizer to use</li>
+</ul>
+<h4 id="optimize-opt-base"><a href="#optimize-opt-base" class="headerlink" title="optimize(opt_base)"></a>optimize(opt_base)</h4><ul>
+<li>opt_tensor: [n_problems, action_horizon, d_action]</li>
+</ul>
+<h4 id="optimize-opt-base-1"><a href="#optimize-opt-base-1" class="headerlink" title="_optimize(opt_base)"></a>_optimize(opt_base)</h4><ul>
+<li>abstractmethod</li>
+</ul>
+<h4 id="optimize-particle-opt-base"><a href="#optimize-particle-opt-base" class="headerlink" title="_optimize(particle_opt__base)"></a>_optimize(particle_opt__base)</h4><ul>
+<li>decide whether use cuda graph</li>
+</ul>
+<h4 id="run-opt-iters-particle-opt-base"><a href="#run-opt-iters-particle-opt-base" class="headerlink" title="_run_opt_iters(particle_opt_base)"></a>_run_opt_iters(particle_opt_base)</h4><ul>
+<li><p>update act_seq alone timeline</p>
+</li>
+<li><p>genertate trajectory</p>
+</li>
+<li><p>update distribution</p>
+<h4 id="generate-rollouts"><a href="#generate-rollouts" class="headerlink" title="generate_rollouts"></a>generate_rollouts</h4><ul>
+<li>sample actions from init action</li>
+<li>rollout_fn-&gt;traj<ol>
+<li>act—(forward)—state</li>
+<li>cost_seq</li>
+</ol>
+</li>
+</ul>
+<h4 id="cal-val"><a href="#cal-val" class="headerlink" title="_cal_val"></a>_cal_val</h4><ul>
+<li>calculate cost and value cost</li>
+</ul>
+</li>
+</ul>
 
         </div>
 
@@ -171,7 +263,7 @@
                 
                     <p class="copyright-item">
                         <span>Permalink:</span>
-                        <span><a href="http://example.com/2024/05/02/Model-Predictive-Control/">http://example.com/2024/05/02/Model-Predictive-Control/</a></span>
+                        <span><a href="http://example.com/2024/05/10/Curobo-MPPI/">http://example.com/2024/05/10/Curobo-MPPI/</a></span>
                     </p>
                 
                 
@@ -195,9 +287,7 @@
                 <span class="tag">
                     
                     
-                        <a href="/tags/robotics/"># robotics</a>
-                    
-                        <a href="/tags/curobo/"># curobo</a>
+                        <a href="/tags/curobo-mppi/"># curobo mppi</a>
                     
                         
                 </span>
@@ -210,10 +300,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2024/05/10/Curobo-MPPI/">Curobo_MPPI</a>
             
-            
-            <a class="next" rel="next" href="/2024/05/02/hello-world/">Hello World</a>
+            <a class="next" rel="next" href="/2024/05/02/Model-Predictive-Control/">Model Predictive Control</a>
             
         </section>
 
